@@ -5,20 +5,16 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
-public class SummonerInfo extends Activity
+public class MainActivity extends Activity
 		implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
 	/**
@@ -34,7 +30,7 @@ public class SummonerInfo extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_summoner_info);
+		setContentView(R.layout.activity_main_activity);
 
 		mNavigationDrawerFragment = (NavigationDrawerFragment)
 				getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -58,14 +54,27 @@ public class SummonerInfo extends Activity
 	public void onSectionAttached(int number) {
 		switch (number) {
 			case 1:
-				mTitle = getString(R.string.title_section1);
+				mTitle = "My Overall Stats";
 				break;
 			case 2:
-				mTitle = getString(R.string.title_section2);
+				mTitle = "My Top Laners";
 				break;
 			case 3:
-				mTitle = getString(R.string.title_section3);
+				mTitle = "My Junglers";
 				break;
+			case 4:
+				mTitle = "My Mid Laners";
+				break;
+			case 5:
+				mTitle = "My AD Carries";
+				break;
+			case 6:
+				mTitle = "My Supports";
+				break;
+			case 7:
+				startActivity(new Intent(this, AddGameInfo.class));
+				break;
+
 		}
 	}
 
@@ -140,7 +149,7 @@ public class SummonerInfo extends Activity
 		@Override
 		public void onAttach(Activity activity) {
 			super.onAttach(activity);
-			((SummonerInfo) activity).onSectionAttached(
+			((MainActivity) activity).onSectionAttached(
 					getArguments().getInt(ARG_SECTION_NUMBER));
 		}
 	}
