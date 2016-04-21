@@ -2,19 +2,31 @@ package com.example.steven.lolchamppool;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 public class AddGameInfo extends Activity {
 
-	public String[] allChamps;
+	public String allChamps;
+	public String[] champList;
 	Spinner dropdown;
+	Scanner scanner;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_game_info);
+		generateChampsForDropdown();
 	}
 
 	@Override
@@ -41,7 +53,8 @@ public class AddGameInfo extends Activity {
 
 	public void generateChampsForDropdown() {
 		dropdown = (Spinner) findViewById(R.id.AllChamps);
-		allChamps = new String[130];
-		allChamps[0] = "Aatrox";
+		allChamps = getString(R.string.champ_names);
+		champList = allChamps.split("-");
+		dropdown.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, champList));
 	}
 }
