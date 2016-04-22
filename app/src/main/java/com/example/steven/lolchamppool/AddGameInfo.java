@@ -19,14 +19,17 @@ public class AddGameInfo extends Activity {
 
 	public String allChamps;
 	public String[] champList;
-	Spinner dropdown;
-	Scanner scanner;
+	Spinner champSelect;
+	public String allRoles;
+	public String[] roleList;
+	Spinner roleSelect;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_game_info);
 		generateChampsForDropdown();
+		generateRolesForDropdown();
 	}
 
 	@Override
@@ -52,9 +55,16 @@ public class AddGameInfo extends Activity {
 	}
 
 	public void generateChampsForDropdown() {
-		dropdown = (Spinner) findViewById(R.id.AllChamps);
+		champSelect = (Spinner) findViewById(R.id.AllChamps);
 		allChamps = getString(R.string.champ_names);
 		champList = allChamps.split("-");
-		dropdown.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, champList));
+		champSelect.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, champList));
+	}
+
+	public void generateRolesForDropdown() {
+		roleSelect = (Spinner) findViewById(R.id.AllRoles);
+		allRoles = getString(R.string.roles);
+		roleList = allRoles.split("-");
+		roleSelect.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, roleList));
 	}
 }
