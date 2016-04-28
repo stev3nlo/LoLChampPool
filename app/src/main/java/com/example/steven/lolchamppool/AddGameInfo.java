@@ -67,4 +67,6 @@ public class AddGameInfo extends Activity {
 		roleList = allRoles.split("-");
 		roleSelect.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, roleList));
 	}
+
+
 }

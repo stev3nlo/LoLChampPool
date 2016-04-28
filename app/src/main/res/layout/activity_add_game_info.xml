@@ -61,10 +61,10 @@
         android:layout_toStartOf="@+id/slash1"
         android:gravity="right"
         android:textAlignment="gravity"
-        android:inputType="number"
         android:id="@+id/NumKills"
         android:hint="     "
         android:maxLength="2"
+        android:inputType="number"
         />
 
     <TextView
@@ -87,6 +87,7 @@
         android:id="@+id/NumDeaths"
         android:hint="     "
         android:maxLength="2"
+        android:inputType="number"
         />
 
     <TextView
@@ -109,6 +110,82 @@
         android:id="@+id/NumAssists"
         android:hint="     "
         android:maxLength="2"
+        android:inputType="number"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="195dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/CS"
+        android:text="Creep Score"
+        />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="215dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textAlignment="gravity"
+        android:id="@+id/CreepScore"
+        android:hint="      "
+        android:maxLength="3"
+        android:inputType="number"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="265dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/TimeStamp"
+        android:text="Game Duration"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="285dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textAlignment="gravity"
+        android:id="@+id/colon"
+        android:text=":"
+        android:textSize="24sp"
+        />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/colon"
+        android:layout_toStartOf="@+id/colon"
+        android:id="@+id/Mins"
+        android:hint="00"
+        android:maxLength="2"
+        android:inputType="number"
+        />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/colon"
+        android:layout_toEndOf="@+id/colon"
+        android:id="@+id/Secs"
+        android:hint="00"
+        android:maxLength="2"
+        android:inputType="number"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="350dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/AddGame"
+        android:text="Add Game"
+
         />
 
 </RelativeLayout>
