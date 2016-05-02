@@ -1,9 +1,13 @@
 package com.example.steven.lolchamppool;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
 
 /**
  * Created by Steven on 4/28/2016.
@@ -44,7 +48,79 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		onCreate(db);
 	}
 
-	public void addGame(Game game) {
+	public Game getGame(int id) {
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.query(TABLE_STATS, new String[]{KEY_ID, KEY_CHAMPION_NAME, KEY_ROLE, KEY_KILLS,
+						KEY_DEATHS, KEY_ASSISTS, KEY_CREEPSCORE, KEY_MINS, KEY_SECS}, KEY_ID + "=?", new String[]{String.valueOf(id)},
+				null, null, null, null);
 
+		if (cursor != null)
+			cursor.moveToFirst();
+
+		Game game = new Game(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2),
+				Integer.parseInt(cursor.getString(3)), Integer.parseInt(cursor.getString(4)), Integer.parseInt(cursor.getString(5)),
+				Integer.parseInt(cursor.getString(6)), Integer.parseInt(cursor.getString(7)), Integer.parseInt(cursor.getString(8)));
+
+		return game;
+	}
+
+	public void addGame(Game game) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues values = new ContentValues();
+
+		values.put(KEY_ID, game.getId());
+		values.put(KEY_CHAMPION_NAME, game.getName());
+		values.put(KEY_ROLE, game.getRole());
+		values.put(KEY_KILLS, game.getKills());
+		values.put(KEY_DEATHS, game.getDeaths());
+		values.put(KEY_ASSISTS, game.getAssists());
+		values.put(KEY_CREEPSCORE, game.getCreepScore());
+		values.put(KEY_MINS, game.getMins());
+		values.put(KEY_SECS, game.getSecs());
+
+		db.insert(TABLE_STATS, null, values);
+		db.close();
+	}
+
+	public ArrayList<Game> getAllGames() {
+		ArrayList<Game> games = new ArrayList<>();
+		String selectQuery = "SELECT * FROM " + TABLE_STATS;
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+
+		if (cursor.moveToFirst()) {
+			do {
+				Game game = new Game();
+				game.setId(Integer.parseInt(cursor.getString(0)));
+				game.setName(cursor.getString(1));
+				game.setRole(cursor.getString(2));
+				game.setKills(Integer.parseInt(cursor.getString(3)));
+				game.setDeaths(Integer.parseInt(cursor.getString(4)));
+				game.setAssists(Integer.parseInt(cursor.getString(5)));
+				game.setCreepScore(Integer.parseInt(cursor.getString(6)));
+				game.setMins(Integer.parseInt(cursor.getString(7)));
+				game.setSecs(Integer.parseInt(cursor.getString(8)));
+			} while (cursor.moveToNext());
+		}
+		return games;
+	}
+
+	public int getGameCount() {
+		String countQuery = "SELECT * FROM " + TABLE_STATS;
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(countQuery, null);
+		return cursor.getCount();
+	}
+
+	public int updateGame(Game game) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		return db.update(TABLE_STATS, values, KEY_ID + " = ?", new String[]{String.valueOf(game.getId())});
+	}
+
+	public void deleteGame(Game game) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		db.delete(TABLE_STATS, KEY_ID + " = ?", new String[]{String.valueOf(game.getId())});
+		db.close();
 	}
 }
