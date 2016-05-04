@@ -185,7 +185,7 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/AddGame"
         android:text="Add Game"
-
+        android:onClick="confirmGame"
         />
 
 </RelativeLayout>

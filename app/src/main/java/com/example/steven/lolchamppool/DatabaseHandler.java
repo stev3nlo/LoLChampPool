@@ -123,4 +123,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		db.delete(TABLE_STATS, KEY_ID + " = ?", new String[]{String.valueOf(game.getId())});
 		db.close();
 	}
+
+	public void clearAll() {
+		for (int i = 0; i < getGameCount() - 1; i++) {
+			deleteGame(getGame(i));
+		}
+	}
 }

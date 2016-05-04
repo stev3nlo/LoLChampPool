@@ -14,8 +14,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 
+import java.util.ArrayList;
+
 public class MainActivity extends Activity
 		implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+
+	private static final String STATS = "myStatsScreen";
+	private static final String TOP = "topLaners";
+	private static final String JUNGLE = "junglers";
+	private static final String MID = "midLaners";
+	private static final String ADC = "marksmen";
+	private static final String SUPPORT = "supports";
+
+	String screen = STATS;
+	ArrayList<Game> games;
+	ArrayList<Champion> champs;
 
 	/**
 	 * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -55,21 +68,27 @@ public class MainActivity extends Activity
 		switch (number) {
 			case 1:
 				mTitle = "My Overall Stats";
+				screen = STATS;
 				break;
 			case 2:
 				mTitle = "My Top Laners";
+				screen = TOP;
 				break;
 			case 3:
 				mTitle = "My Junglers";
+				screen = JUNGLE;
 				break;
 			case 4:
 				mTitle = "My Mid Laners";
+				screen = MID;
 				break;
 			case 5:
 				mTitle = "My AD Carries";
+				screen = ADC;
 				break;
 			case 6:
 				mTitle = "My Supports";
+				screen = SUPPORT;
 				break;
 			case 7:
 				startActivity(new Intent(this, AddGameInfo.class));
