@@ -5,9 +5,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -72,7 +75,7 @@ public class AddGameInfo extends Activity {
 		roleSelect.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, roleList));
 	}
 
-	public void confirmGame() {
+	public void confirmGame(View v) {
 		DatabaseHandler db = new DatabaseHandler(this);
 		int id = db.getGameCount();
 		String name = champSelect.getSelectedItem().toString();
@@ -108,19 +111,46 @@ public class AddGameInfo extends Activity {
 //		intent.putExtra("secs", secs);
 //		startActivity(intent);
 
-		new AlertDialog.Builder(this)
-				.setTitle("Delete entry")
-				.setMessage("Are you sure you want to delete this entry?")
-				.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						// continue with delete
-					}
-				})
-				.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						// do nothing
-					}
-				})
-				.show();
+//		new AlertDialog.Builder(this)
+//				.setTitle("Confirm")
+//				.setMessage("Are you sure the following is correct?\nThis cannot be undone.")
+//				.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//					public void onClick(DialogInterface dialog, int which) {
+//						// continue with delete
+//						addGame();
+//					}
+//				})
+//				.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+//					public void onClick(DialogInterface dialog, int which) {
+//						// do nothing
+//					}
+//				})
+//				.show();
+		LayoutInflater linf = LayoutInflater.from(this);
+		final View inflator = linf.inflate(R.layout.alertdialog, null);
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+		alert.setTitle("Confirm");
+		alert.setView(inflator);
+
+//		final EditText input = (EditText) inflator.findViewById(R);
+
+		alert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				addGame();
+			}
+		});
+		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			 @Override
+			public void onClick(DialogInterface dialog, int which) {
+
+			 }
+		});
+	}
+
+	public void addGame() {
+
 	}
 }
