@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,11 +31,13 @@ public class AddGameInfo extends Activity {
 	public String allRoles;
 	public String[] roleList;
 	Spinner roleSelect;
+	DatabaseHandler db;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_game_info);
+		db = new DatabaseHandler(this);
 		generateChampsForDropdown();
 		generateRolesForDropdown();
 	}
@@ -99,33 +102,8 @@ public class AddGameInfo extends Activity {
 		EditText timeSecs = (EditText) findViewById(R.id.Secs);
 		int secs = Integer.parseInt(timeSecs.getText() + "");
 
-//		Intent intent = new Intent(this, Confirmation.class);
-//		intent.putExtra("ID", id);
-//		intent.putExtra("name", name);
-//		intent.putExtra("role", role);
-//		intent.putExtra("kills", kills);
-//		intent.putExtra("deaths", deaths);
-//		intent.putExtra("assists", assists);
-//		intent.putExtra("CS", CS);
-//		intent.putExtra("mins", mins);
-//		intent.putExtra("secs", secs);
-//		startActivity(intent);
+		final Game game = new Game(id, name, role, kills, deaths, assists, CS, mins, secs);
 
-//		new AlertDialog.Builder(this)
-//				.setTitle("Confirm")
-//				.setMessage("Are you sure the following is correct?\nThis cannot be undone.")
-//				.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//					public void onClick(DialogInterface dialog, int which) {
-//						// continue with delete
-//						addGame();
-//					}
-//				})
-//				.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-//					public void onClick(DialogInterface dialog, int which) {
-//						// do nothing
-//					}
-//				})
-//				.show();
 		LayoutInflater linf = LayoutInflater.from(this);
 		final View inflator = linf.inflate(R.layout.alertdialog, null);
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -133,24 +111,47 @@ public class AddGameInfo extends Activity {
 		alert.setTitle("Confirm");
 		alert.setView(inflator);
 
-//		final EditText input = (EditText) inflator.findViewById(R);
+		final TextView championText = (TextView) inflator.findViewById(R.id.ChampionText);
+		final TextView roleText = (TextView) inflator.findViewById(R.id.RoleText);
+		final TextView kdaText = (TextView) inflator.findViewById(R.id.KDAText);
+		final TextView csText = (TextView) inflator.findViewById(R.id.CSText);
+		final TextView timeText = (TextView) inflator.findViewById(R.id.TimeText);
+
+		String champString = championText.getText() + "";
+		String roleString = roleText.getText() + "";
+		String kdaString = kdaText.getText() + "";
+		String csString = csText.getText() + "";
+		String timeString = timeText.getText() + "";
+
+		champString += name + " ";
+		roleString = " " + roleString + role;
+		kdaString += kills + "/" + deaths + "/" + assists + " ";
+		csString = " " + csString + CS;
+		timeString += mins + ":" + secs;
+
+		championText.setText(champString);
+		roleText.setText(roleString);
+		kdaText.setText(kdaString);
+		csText.setText(csString);
+		timeText.setText(timeString);
 
 		alert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				addGame();
+				addGame(game);
 			}
 		});
 		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			 @Override
+			@Override
 			public void onClick(DialogInterface dialog, int which) {
 
-			 }
+			}
 		});
+		alert.show();
 	}
 
-	public void addGame() {
-
+	public void addGame(Game game) {
+		db.addGame(game);
+		this.finish();
 	}
 }

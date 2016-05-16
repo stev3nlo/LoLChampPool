@@ -18,8 +18,9 @@
         </activity>
         <activity
             android:name=".AddGameInfo"
-            android:label="@string/title_activity_add_game_info" >
+            android:label="@string/title_activity_add_game_info"
+            android:parentActivityName=".MainActivity"
+            >
         </activity>
     </application>
-
 </manifest>
