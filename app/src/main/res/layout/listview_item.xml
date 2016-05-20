@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="40dp"
+        android:text="Champion"
+        android:id="@+id/champTag"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/champTag"
+        android:layout_marginLeft="240dp"
+        android:text="00.0/00.0/00.0"
+        android:id="@+id/kdaTag"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/csTag"
+        android:layout_alignStart="@+id/champTag"
+        android:layout_marginTop="5dp"
+        android:text="Average Game Duration: "
+        android:id="@+id/timeTag"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/timeTag"
+        android:layout_below="@id/champTag"
+        android:layout_marginTop="5dp"
+        android:text="Average CS: "
+        android:id="@+id/csTag"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/timeTag"
+        android:layout_alignStart="@+id/kdaTag"
+        android:text="00:00"
+        android:id="@+id/timeStampTag"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/timeStampTag"
+        android:layout_alignTop="@+id/csTag"
+        android:layout_below="@+id/timeStampTag"
+        android:text="0"
+        android:id="@+id/creepScoreTag"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/timeTag"
+        android:layout_alignStart="@+id/timeTag"
+        android:layout_marginTop="5dp"
+        android:text="Win Rate:"
+        android:id="@+id/winTag"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/winTag"
+        android:layout_alignStart="@+id/timeStampTag"
+        android:text="0%"
+        android:id="@+id/winRateTag"
+        />
+
+</RelativeLayout>

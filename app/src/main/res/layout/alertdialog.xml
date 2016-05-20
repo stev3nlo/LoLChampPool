@@ -20,7 +20,7 @@
         android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
         android:id="@+id/CannotUndo"
-        android:text="This cannot be undone."
+        android:text="This cannot be undone unless you reset all your data."
         />
     <TextView
         android:layout_width="wrap_content"
@@ -73,5 +73,14 @@
         android:id="@+id/TimeText"
         android:text="Game Duration: "
         android:textColor="#a0a0a0"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/OutcomeText"
+        android:text="You "
+        android:textColor="#9400d3"/>
 
 </RelativeLayout>

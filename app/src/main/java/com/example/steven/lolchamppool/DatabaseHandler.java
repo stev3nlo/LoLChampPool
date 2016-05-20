@@ -27,6 +27,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	private static final String KEY_CREEPSCORE = "Creep Score";
 	private static final String KEY_MINS = "Minutes";
 	private static final String KEY_SECS = "Seconds";
+	private static final String KEY_WIN = "Win";
 
 	public DatabaseHandler(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -37,7 +38,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		String CREATE_STAT_TABLE = "CREATE TABLE " + TABLE_STATS + "(" + KEY_ID +
 				" INTEGER PRIMARY KEY," + KEY_CHAMPION_NAME + " TEXT," + KEY_ROLE + " TEXT," +
 				KEY_KILLS + " TEXT," + KEY_DEATHS + " TEXT," + KEY_ASSISTS + " TEXT," +
-				KEY_CREEPSCORE + " TEXT," + KEY_MINS + " TEXT," + KEY_SECS + " TEXT" + ")";
+				KEY_CREEPSCORE + " TEXT," + KEY_MINS + " TEXT," + KEY_SECS + " TEXT," + KEY_WIN +
+				" TEXT" + ")";
 		db.execSQL(CREATE_STAT_TABLE);
 	}
 
@@ -51,7 +53,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	public Game getGame(int id) {
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.query(TABLE_STATS, new String[]{KEY_ID, KEY_CHAMPION_NAME, KEY_ROLE, KEY_KILLS,
-						KEY_DEATHS, KEY_ASSISTS, KEY_CREEPSCORE, KEY_MINS, KEY_SECS}, KEY_ID + "=?", new String[]{String.valueOf(id)},
+						KEY_DEATHS, KEY_ASSISTS, KEY_CREEPSCORE, KEY_MINS, KEY_SECS, KEY_WIN}, KEY_ID + "=?", new String[]{String.valueOf(id)},
 				null, null, null, null);
 
 		if (cursor != null)
@@ -59,7 +61,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 		Game game = new Game(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2),
 				Integer.parseInt(cursor.getString(3)), Integer.parseInt(cursor.getString(4)), Integer.parseInt(cursor.getString(5)),
-				Integer.parseInt(cursor.getString(6)), Integer.parseInt(cursor.getString(7)), Integer.parseInt(cursor.getString(8)));
+				Integer.parseInt(cursor.getString(6)), Integer.parseInt(cursor.getString(7)), Integer.parseInt(cursor.getString(8)),
+				Boolean.parseBoolean(cursor.getString(9)));
 
 		return game;
 	}
@@ -77,6 +80,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		values.put(KEY_CREEPSCORE, game.getCreepScore());
 		values.put(KEY_MINS, game.getMins());
 		values.put(KEY_SECS, game.getSecs());
+		values.put(KEY_WIN, game.isWin());
 
 		db.insert(TABLE_STATS, null, values);
 		db.close();
@@ -100,6 +104,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				game.setCreepScore(Integer.parseInt(cursor.getString(6)));
 				game.setMins(Integer.parseInt(cursor.getString(7)));
 				game.setSecs(Integer.parseInt(cursor.getString(8)));
+				game.setWin(Boolean.parseBoolean(cursor.getString(9)));
 			} while (cursor.moveToNext());
 		}
 		return games;

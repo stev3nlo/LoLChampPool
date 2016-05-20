@@ -13,6 +13,7 @@ public class Game {
 	int creepScore;
 	int mins;
 	int secs;
+	boolean win;
 
 	public Game() {
 		id = -1;
@@ -24,9 +25,10 @@ public class Game {
 		creepScore = -1;
 		mins = -1;
 		secs = -1;
+		win = false;
 	}
 
-	public Game(int id, String name, String role, int kills, int deaths, int assists, int creepScore, int mins, int secs) {
+	public Game(int id, String name, String role, int kills, int deaths, int assists, int creepScore, int mins, int secs, boolean win) {
 		this.id = id;
 		this.name = name;
 		this.role = role;
@@ -36,6 +38,7 @@ public class Game {
 		this.creepScore = creepScore;
 		this.mins = mins;
 		this.secs = secs;
+		this.win = win;
 	}
 
 	public int getId() {
@@ -108,5 +111,13 @@ public class Game {
 
 	public void setSecs(int secs) {
 		this.secs = secs;
+	}
+
+	public boolean isWin() {
+		return win;
+	}
+
+	public void setWin(boolean win) {
+		this.win = win;
 	}
 }

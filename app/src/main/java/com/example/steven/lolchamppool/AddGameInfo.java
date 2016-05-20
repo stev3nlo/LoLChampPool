@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -31,6 +33,9 @@ public class AddGameInfo extends Activity {
 	public String allRoles;
 	public String[] roleList;
 	Spinner roleSelect;
+	public String allOutcomes;
+	public String[] outcomeList;
+	Spinner outcomeSelect;
 	DatabaseHandler db;
 
 	@Override
@@ -78,6 +83,13 @@ public class AddGameInfo extends Activity {
 		roleSelect.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, roleList));
 	}
 
+	public void generateOptionsForOutcome() {
+		outcomeSelect = (Spinner) findViewById(R.id.Win);
+		allOutcomes = getString(R.string.outcomes);
+		outcomeList = allOutcomes.split("-");
+		outcomeSelect.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, outcomeList));
+	}
+
 	public void confirmGame(View v) {
 		DatabaseHandler db = new DatabaseHandler(this);
 		int id = db.getGameCount();
@@ -102,7 +114,17 @@ public class AddGameInfo extends Activity {
 		EditText timeSecs = (EditText) findViewById(R.id.Secs);
 		int secs = Integer.parseInt(timeSecs.getText() + "");
 
-		final Game game = new Game(id, name, role, kills, deaths, assists, CS, mins, secs);
+		String winLose = outcomeSelect.getSelectedItem().toString();
+
+		Boolean won = false;
+		if (winLose.equals("Win")) {
+			won = true;
+		}
+		else {
+			won = false;
+		}
+
+		final Game game = new Game(id, name, role, kills, deaths, assists, CS, mins, secs, won);
 
 		LayoutInflater linf = LayoutInflater.from(this);
 		final View inflator = linf.inflate(R.layout.alertdialog, null);
@@ -116,24 +138,28 @@ public class AddGameInfo extends Activity {
 		final TextView kdaText = (TextView) inflator.findViewById(R.id.KDAText);
 		final TextView csText = (TextView) inflator.findViewById(R.id.CSText);
 		final TextView timeText = (TextView) inflator.findViewById(R.id.TimeText);
+		final TextView outcomeText = (TextView) inflator.findViewById(R.id.OutcomeText);
 
 		String champString = championText.getText() + "";
 		String roleString = roleText.getText() + "";
 		String kdaString = kdaText.getText() + "";
 		String csString = csText.getText() + "";
 		String timeString = timeText.getText() + "";
+		String outcomeString = outcomeText.getText() + "";
 
 		champString += name + " ";
 		roleString = " " + roleString + role;
 		kdaString += kills + "/" + deaths + "/" + assists + " ";
 		csString = " " + csString + CS;
 		timeString += mins + ":" + secs;
+		outcomeString += winLose;
 
 		championText.setText(champString);
 		roleText.setText(roleString);
 		kdaText.setText(kdaString);
 		csText.setText(csString);
 		timeText.setText(timeString);
+		outcomeText.setText(outcomeString);
 
 		alert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
 			@Override

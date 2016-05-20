@@ -3,18 +3,29 @@ package com.example.steven.lolchamppool;
 import android.app.Activity;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends Activity
 		implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -26,9 +37,12 @@ public class MainActivity extends Activity
 	private static final String ADC = "marksmen";
 	private static final String SUPPORT = "supports";
 
-	String screen = STATS;
-	ArrayList<Game> games;
-	ArrayList<Champion> champs;
+	static String screen = STATS;
+	static ArrayList<Game> games;
+	static ArrayList<Champion> champs;
+	static DatabaseHandler db;
+	static Champion[] champsList;
+	static ArrayAdapter<Champion> adapter;
 
 	/**
 	 * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -44,6 +58,18 @@ public class MainActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_activity);
+		db = new DatabaseHandler(this);
+		champs = new ArrayList<>();
+
+		champs.add(0, new Champion("Master Yi", 12.2, 3.5, 8.1, 128, 43, 24, .67));
+		champs.add(1, new Champion("Katarina", 26.4, 9.3, 5.7, 156, 37, 48, .58));
+
+		champsList = new Champion[champs.size()];
+		int index = 0;
+		for (Champion champ : champs) {
+			champsList[index] = champ;
+			index++;
+		}
 
 		mNavigationDrawerFragment = (NavigationDrawerFragment)
 				getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -53,7 +79,17 @@ public class MainActivity extends Activity
 		mNavigationDrawerFragment.setUp(
 				R.id.navigation_drawer,
 				(DrawerLayout) findViewById(R.id.drawer_layout));
+
+
+//			adapter = new ArrayAdapter<Champion>(getActivity(), R.layout.listview_item, champs);
+		adapter = new ListAdapter1();
+		Log.d("first",""+adapter);
+		ListView list = (ListView) this.findViewById(R.id.Champions);
+		Log.d("second", ""+ list);
+		list.setAdapter(adapter);
 	}
+
+
 
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
@@ -125,8 +161,28 @@ public class MainActivity extends Activity
 		int id = item.getItemId();
 
 		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_settings) {
-			return true;
+		if (id == R.id.reset) {
+			LayoutInflater linf = LayoutInflater.from(this);
+			final View inflator = linf.inflate(R.layout.alertdialog2, null);
+			AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+			alert.setTitle("Confirm");
+			alert.setView(inflator);
+			alert.setPositiveButton("Reset", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					db.clearAll();
+					Toast.makeText(MainActivity.this, "All Data Erased.",
+							Toast.LENGTH_LONG).show();
+				}
+			});
+			alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+				}
+			});
+			alert.show();
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -140,6 +196,7 @@ public class MainActivity extends Activity
 		 * The fragment argument representing the section number for this
 		 * fragment.
 		 */
+
 		private static final String ARG_SECTION_NUMBER = "section_number";
 
 		/**
@@ -172,4 +229,43 @@ public class MainActivity extends Activity
 		}
 	}
 
+	//new class to populate to list view
+	private class ListAdapter1 extends ArrayAdapter<Champion> {
+		public ListAdapter1() {
+			super(MainActivity.this, R.layout.listview_item, champs);
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+
+			View itemView = convertView;
+			if(itemView == null) {
+				itemView = getLayoutInflater().inflate(R.layout.listview_item, parent, false);
+			}
+
+			Champion champ = champs.get(position);
+			String champName = champ.getName();
+			String kda = champ.getKills() + "/" + champ.getDeaths() + "/" + champ.getAssists();
+			String cs = champ.getCs() + "";
+			String timeStamp = champ.getMins() + ":" + champ.getSecs();
+			String winRate = champ.getWinrate() + "";
+
+			TextView champTag = (TextView) itemView.findViewById(R.id.champTag);
+			champTag.setText(champName);
+
+			TextView kdaTag = (TextView) itemView.findViewById(R.id.kdaTag);
+			kdaTag.setText(kda);
+
+			TextView csTag = (TextView) itemView.findViewById(R.id.creepScoreTag);
+			csTag.setText(cs);
+
+			TextView timeStampTag = (TextView) itemView.findViewById(R.id.timeStampTag);
+			timeStampTag.setText(timeStamp);
+
+			TextView winRateTag = (TextView) itemView.findViewById(R.id.winRateTag);
+			winRateTag.setText(winRate);
+
+			return itemView;
+		}
+	}
 }
