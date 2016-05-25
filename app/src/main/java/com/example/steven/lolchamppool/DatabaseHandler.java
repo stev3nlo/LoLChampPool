@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class DatabaseHandler extends SQLiteOpenHelper {
 
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	private static final String DATABASE_NAME = "ChampionStats";
 	private static final String TABLE_STATS = "stats";
 
@@ -24,7 +24,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	private static final String KEY_KILLS = "Kills";
 	private static final String KEY_DEATHS = "Deaths";
 	private static final String KEY_ASSISTS = "Assists";
-	private static final String KEY_CREEPSCORE = "Creep Score";
+	private static final String KEY_CREEPSCORE = "CreepScore";
 	private static final String KEY_MINS = "Minutes";
 	private static final String KEY_SECS = "Seconds";
 	private static final String KEY_WIN = "Win";
@@ -105,6 +105,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				game.setMins(Integer.parseInt(cursor.getString(7)));
 				game.setSecs(Integer.parseInt(cursor.getString(8)));
 				game.setWin(Boolean.parseBoolean(cursor.getString(9)));
+				games.add(game);
 			} while (cursor.moveToNext());
 		}
 		return games;

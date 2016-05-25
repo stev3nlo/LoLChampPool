@@ -9,26 +9,58 @@
 
     <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <ScrollView
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/scrollView"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/myKDA"
+            android:text="My Average KDA: "
+            />
 
-        </ScrollView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/myKDA"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/myCS"
+            android:text="My Average CS: "
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/myCS"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/myTime"
+            android:text="My Average Game Time: "
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/myTime"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/myWinRate"
+            android:text="My Average Win Rate: "
+            />
 
         <ListView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="400dp"
+            android:layout_below="@+id/myWinRate"
+            android:layout_marginTop="5dp"
             android:id="@+id/Champions"
             android:layout_gravity="center"/>
-    </FrameLayout>
+    </RelativeLayout>
 
 
 

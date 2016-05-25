@@ -20,7 +20,9 @@
         android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
         android:id="@+id/CannotUndo"
-        android:text="This cannot be undone unless you reset all your data."
+        android:text="This cannot be undone unless you reset all\nyour data.\n "
+        android:gravity="center"
+        android:textAlignment="gravity"
         />
     <TextView
         android:layout_width="wrap_content"

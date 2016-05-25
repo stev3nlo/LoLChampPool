@@ -45,6 +45,7 @@ public class AddGameInfo extends Activity {
 		db = new DatabaseHandler(this);
 		generateChampsForDropdown();
 		generateRolesForDropdown();
+		generateOptionsForOutcome();
 	}
 
 	@Override
@@ -117,7 +118,7 @@ public class AddGameInfo extends Activity {
 		String winLose = outcomeSelect.getSelectedItem().toString();
 
 		Boolean won = false;
-		if (winLose.equals("Win")) {
+		if (winLose.equals("Won")) {
 			won = true;
 		}
 		else {
