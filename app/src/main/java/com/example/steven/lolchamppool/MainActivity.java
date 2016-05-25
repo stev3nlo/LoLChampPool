@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -94,63 +95,70 @@ public class MainActivity extends Activity
 	public void onSectionAttached(int number) {
 		switch (number) {
 			case 1:
+				games = db.getAllGames();
 				mTitle = "My Overall Stats";
 				screen = STATS;
-				compileChamps(games);
+				champs = compileChamps(games);
 				updateStats();
-				Log.e("db games", db.getAllGames().toString());
-				Log.e("games", games.toString());
-				Log.e("champs", champs.toString());
+				populateList();
+				Log.e("db games", db.getAllGames().size() + "");
+				Log.e("games", games.size() + "");
+				Log.e("champs", champs.size() + "");
 				break;
 			case 2:
+				games = db.getAllGames();
 				mTitle = "My Top Laners";
 				screen = TOP;
 				currRoleGames = filterGames("Top Laner");
 				champs = compileChamps(currRoleGames);
 				updateStats();
 				populateList();
-				Log.e("games", currRoleGames.toString());
-				Log.e("champs", champs.toString());
+				Log.e("games", currRoleGames.size() + "");
+				Log.e("champs", champs.size() + "");
 				break;
 			case 3:
+				games = db.getAllGames();
 				mTitle = "My Junglers";
 				screen = JUNGLE;
 				currRoleGames = filterGames("Jungler");
 				champs = compileChamps(currRoleGames);
 				updateStats();
 				populateList();
-				Log.e("games", currRoleGames.toString());
-				Log.e("champs", champs.toString());
+				Log.e("games", currRoleGames.size() + "");
+				Log.e("champs", champs.size() + "");
 				break;
 			case 4:
+				games = db.getAllGames();
 				mTitle = "My Mid Laners";
 				screen = MID;
 				currRoleGames = filterGames("Mid Laner");
 				champs = compileChamps(currRoleGames);
 				updateStats();
 				populateList();
-				Log.e("games", currRoleGames.toString());
-				Log.e("champs", champs.toString());
+				Log.e("games", currRoleGames.size() + "");
+				Log.e("champs", champs.size() + "");
 				break;
 			case 5:
+				games = db.getAllGames();
 				mTitle = "My AD Carries";
 				screen = ADC;
 				currRoleGames = filterGames("AD Carry");
 				champs = compileChamps(currRoleGames);
 				updateStats();
 				populateList();
-				Log.e("games", currRoleGames.toString());
-				Log.e("champs", champs.toString());
+				Log.e("games", currRoleGames.size() + "");
+				Log.e("champs", champs.size() + "");
 				break;
 			case 6:
+				games = db.getAllGames();
 				mTitle = "My Supports";
 				screen = SUPPORT;
 				currRoleGames = filterGames("Support");
 				champs = compileChamps(currRoleGames);
 				updateStats();
 				populateList();
-				Log.e("games", currRoleGames.toString());
-				Log.e("champs", champs.toString());
+				Log.e("games", currRoleGames.size() + "");
+				Log.e("champs", champs.size() + "");
 				break;
 			case 7:
 				startActivity(new Intent(this, AddGameInfo.class));
@@ -198,6 +206,9 @@ public class MainActivity extends Activity
 				public void onClick(DialogInterface dialog, int which) {
 					MainActivity.this.
 					db.clearAll();
+					games.clear();
+					currRoleGames.clear();
+					champs.clear();
 					Toast.makeText(MainActivity.this, "All Data Erased.",
 							Toast.LENGTH_LONG).show();
 					Intent intent = new Intent(MainActivity.this, MainActivity.class);
@@ -292,7 +303,7 @@ public class MainActivity extends Activity
 			timeStampTag.setText(timeStamp);
 
 			TextView winRateTag = (TextView) itemView.findViewById(R.id.winRateTag);
-			winRateTag.setText(winRate + "%");
+			winRateTag.setText((int) (Double.parseDouble(winRate) * 100) + "%");
 
 			return itemView;
 		}
@@ -300,7 +311,8 @@ public class MainActivity extends Activity
 
 	public ArrayList<Game> filterGames(String role) {
 		ArrayList<Game> filteredGames = new ArrayList<>();
-		for (int i = 0; i < games.size() - 1; i++) {
+		for (int i = 0; i < games.size(); i++) {
+			Log.e("Role of " + i, games.get(i).getRole());
 			if (games.get(i).getRole().equals(role)) {
 				filteredGames.add(games.get(i));
 			}
@@ -311,7 +323,7 @@ public class MainActivity extends Activity
 	public ArrayList<Champion> compileChamps(ArrayList<Game> games) {
 		ArrayList<Champion> champs = new ArrayList<>();
 		for (int i = 0; i < games.size(); i++) {
-			Log.e("Champ Names(W/L): " + i, games.get(i).getName() + "/" + games.get(i).isWin());
+			Log.e("Champ Names(W/L): " + i, games.get(i).getName() + "/" + games.get(i).getWin());
 			for (int j = 0; j < champs.size(); j++) {
 				if (!games.get(i).getName().equals(champs.get(j).getName())) {
 					champs.add(new Champion(games.get(i).getName()));
@@ -325,9 +337,9 @@ public class MainActivity extends Activity
 		}
 		for (int i = 0; i < champs.size(); i++) {
 			int numGames = 0;
-			int kills = 0;
-			int deaths = 0;
-			int assists = 0;
+			double kills = 0;
+			double deaths = 0;
+			double assists = 0;
 			int cs = 0;
 			int mins = 0;
 			int secs = 0;
@@ -341,18 +353,22 @@ public class MainActivity extends Activity
 					cs += games.get(j).getCreepScore();
 					mins += games.get(j).getMins();
 					secs += games.get(j).getSecs();
-					if (games.get(j).isWin()) {
-						wins++;
-					}
+					wins += games.get(j).getWin();
 				}
 			}
-			double avgKills = Math.round((kills / numGames) * 10) / 10.0;
-			double avgDeaths = Math.round((deaths / numGames) * 10) / 10.0;
-			double avgAssists = Math.round((assists / numGames) * 10) / 10.0;
+			double avgKills = kills / numGames;
+			double avgDeaths = deaths / numGames;
+			double avgAssists = assists / numGames;
 			int avgCs = cs / numGames;
 			int avgMins = mins / numGames;
 			int avgSecs = secs / numGames;
-			double winRate = Math.round((wins / numGames) * 10) / 10.0;
+			double winRate = wins / numGames;
+
+			avgKills = roundTwoDecimals(avgKills);
+			avgDeaths = roundTwoDecimals(avgDeaths);
+			avgAssists = roundTwoDecimals(avgAssists);
+			winRate = roundTwoDecimals(winRate);
+
 			champs.get(i).setKills(avgKills);
 			champs.get(i).setDeaths(avgDeaths);
 			champs.get(i).setAssists(avgAssists);
@@ -383,16 +399,20 @@ public class MainActivity extends Activity
 		}
 		int numChamps = champs.size();
 		if (numChamps != 0) {
-			kills = Math.round((kills / numChamps) * 10) / 10.0;
-			deaths = Math.round((deaths / numChamps) * 10) / 10.0;
-			assists = Math.round((assists / numChamps) * 10) / 10.0;
+			kills = kills / numChamps;
+			kills = roundTwoDecimals(kills);
+			deaths = deaths / numChamps;
+			deaths = roundTwoDecimals(deaths);
+			assists = assists / numChamps;
+			assists = roundTwoDecimals(assists);
 			avgKDA = kills + "/" + deaths + "/" + assists;
 			avgCS = cs / numChamps + "";
 			mins = mins / numChamps;
 			secs = secs / numChamps;
 			avgTime = mins + ":" + secs;
 			win = win / numChamps * 100;
-			avgWinRate = win + "%";
+			win = roundTwoDecimals(win);
+			avgWinRate = (int) win + "%";
 
 			TextView myKDA = (TextView) findViewById(R.id.myKDA);
 			TextView myCS = (TextView) findViewById(R.id.myCS);
@@ -412,5 +432,10 @@ public class MainActivity extends Activity
 		ListView list = (ListView) this.findViewById(R.id.Champions);
 //		Log.d("second", ""+ list);
 		list.setAdapter(adapter);
+	}
+
+	public double roundTwoDecimals(double d) {
+		DecimalFormat twoDForm = new DecimalFormat("#.##");
+		return Double.valueOf(twoDForm.format(d));
 	}
 }

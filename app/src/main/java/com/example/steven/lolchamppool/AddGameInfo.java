@@ -117,15 +117,13 @@ public class AddGameInfo extends Activity {
 
 		String winLose = outcomeSelect.getSelectedItem().toString();
 
-		Boolean won = false;
+		int won = 0;
 		if (winLose.equals("Won")) {
-			won = true;
-		}
-		else {
-			won = false;
+			won = 1;
 		}
 
 		final Game game = new Game(id, name, role, kills, deaths, assists, CS, mins, secs, won);
+		Log.e("final add W/L", game.getWin() + "");
 
 		LayoutInflater linf = LayoutInflater.from(this);
 		final View inflator = linf.inflate(R.layout.alertdialog, null);

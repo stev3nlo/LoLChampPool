@@ -13,7 +13,7 @@ public class Game {
 	int creepScore;
 	int mins;
 	int secs;
-	boolean win;
+	int win;
 
 	public Game() {
 		id = -1;
@@ -25,10 +25,10 @@ public class Game {
 		creepScore = -1;
 		mins = -1;
 		secs = -1;
-		win = false;
+		win = 0;
 	}
 
-	public Game(int id, String name, String role, int kills, int deaths, int assists, int creepScore, int mins, int secs, boolean win) {
+	public Game(int id, String name, String role, int kills, int deaths, int assists, int creepScore, int mins, int secs, int win) {
 		this.id = id;
 		this.name = name;
 		this.role = role;
@@ -113,11 +113,11 @@ public class Game {
 		this.secs = secs;
 	}
 
-	public boolean isWin() {
+	public int getWin() {
 		return win;
 	}
 
-	public void setWin(boolean win) {
+	public void setWin(int win) {
 		this.win = win;
 	}
 }

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -14,7 +15,7 @@ import java.util.ArrayList;
  */
 public class DatabaseHandler extends SQLiteOpenHelper {
 
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 4;
 	private static final String DATABASE_NAME = "ChampionStats";
 	private static final String TABLE_STATS = "stats";
 
@@ -62,7 +63,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		Game game = new Game(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2),
 				Integer.parseInt(cursor.getString(3)), Integer.parseInt(cursor.getString(4)), Integer.parseInt(cursor.getString(5)),
 				Integer.parseInt(cursor.getString(6)), Integer.parseInt(cursor.getString(7)), Integer.parseInt(cursor.getString(8)),
-				Boolean.parseBoolean(cursor.getString(9)));
+				Integer.parseInt(cursor.getString(9)));
 
 		return game;
 	}
@@ -80,7 +81,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		values.put(KEY_CREEPSCORE, game.getCreepScore());
 		values.put(KEY_MINS, game.getMins());
 		values.put(KEY_SECS, game.getSecs());
-		values.put(KEY_WIN, game.isWin());
+		values.put(KEY_WIN, game.getWin());
+		Log.e("db add w/l", game.getWin() + "");
 
 		db.insert(TABLE_STATS, null, values);
 		db.close();
@@ -104,7 +106,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				game.setCreepScore(Integer.parseInt(cursor.getString(6)));
 				game.setMins(Integer.parseInt(cursor.getString(7)));
 				game.setSecs(Integer.parseInt(cursor.getString(8)));
-				game.setWin(Boolean.parseBoolean(cursor.getString(9)));
+				game.setWin(Integer.parseInt(cursor.getString(9)));
+				Log.e("db W/L", game.getWin() + "");
 				games.add(game);
 			} while (cursor.moveToNext());
 		}
@@ -131,8 +134,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	}
 
 	public void clearAll() {
-		for (int i = 0; i < getGameCount() - 1; i++) {
-			deleteGame(getGame(i));
-		}
+		SQLiteDatabase db = this.getWritableDatabase();
+		db.delete(TABLE_STATS, null, null);
 	}
 }
