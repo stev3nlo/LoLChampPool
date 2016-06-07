@@ -82,7 +82,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		values.put(KEY_MINS, game.getMins());
 		values.put(KEY_SECS, game.getSecs());
 		values.put(KEY_WIN, game.getWin());
-		Log.e("db add w/l", game.getWin() + "");
 
 		db.insert(TABLE_STATS, null, values);
 		db.close();
@@ -107,7 +106,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				game.setMins(Integer.parseInt(cursor.getString(7)));
 				game.setSecs(Integer.parseInt(cursor.getString(8)));
 				game.setWin(Integer.parseInt(cursor.getString(9)));
-				Log.e("db W/L", game.getWin() + "");
 				games.add(game);
 			} while (cursor.moveToNext());
 		}

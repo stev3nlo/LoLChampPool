@@ -33,12 +33,12 @@ import java.util.Objects;
 public class MainActivity extends Activity
 		implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-	private static final String STATS = "myStatsScreen";
-	private static final String TOP = "topLaners";
-	private static final String JUNGLE = "junglers";
-	private static final String MID = "midLaners";
-	private static final String ADC = "marksmen";
-	private static final String SUPPORT = "supports";
+	private static final String STATS = "Overall";
+	private static final String TOP = "Top Laner";
+	private static final String JUNGLE = "Jungler";
+	private static final String MID = "Mid Laner";
+	private static final String ADC = "AD Carry";
+	private static final String SUPPORT = "Support";
 
 	static String screen = STATS;
 	static ArrayList<Game> games;
@@ -80,7 +80,6 @@ public class MainActivity extends Activity
 				(DrawerLayout) findViewById(R.id.drawer_layout));
 
 		games = db.getAllGames();
-		Log.e("db games", games.toString());
 	}
 
 	@Override
@@ -95,70 +94,22 @@ public class MainActivity extends Activity
 	public void onSectionAttached(int number) {
 		switch (number) {
 			case 1:
-				games = db.getAllGames();
-				mTitle = "My Overall Stats";
-				screen = STATS;
-				champs = compileChamps(games);
-				updateStats();
-				populateList();
-				Log.e("db games", db.getAllGames().size() + "");
-				Log.e("games", games.size() + "");
-				Log.e("champs", champs.size() + "");
+				caseOne();
 				break;
 			case 2:
-				games = db.getAllGames();
-				mTitle = "My Top Laners";
-				screen = TOP;
-				currRoleGames = filterGames("Top Laner");
-				champs = compileChamps(currRoleGames);
-				updateStats();
-				populateList();
-				Log.e("games", currRoleGames.size() + "");
-				Log.e("champs", champs.size() + "");
+				caseTwo();
 				break;
 			case 3:
-				games = db.getAllGames();
-				mTitle = "My Junglers";
-				screen = JUNGLE;
-				currRoleGames = filterGames("Jungler");
-				champs = compileChamps(currRoleGames);
-				updateStats();
-				populateList();
-				Log.e("games", currRoleGames.size() + "");
-				Log.e("champs", champs.size() + "");
+				caseThree();
 				break;
 			case 4:
-				games = db.getAllGames();
-				mTitle = "My Mid Laners";
-				screen = MID;
-				currRoleGames = filterGames("Mid Laner");
-				champs = compileChamps(currRoleGames);
-				updateStats();
-				populateList();
-				Log.e("games", currRoleGames.size() + "");
-				Log.e("champs", champs.size() + "");
+				caseFour();
 				break;
 			case 5:
-				games = db.getAllGames();
-				mTitle = "My AD Carries";
-				screen = ADC;
-				currRoleGames = filterGames("AD Carry");
-				champs = compileChamps(currRoleGames);
-				updateStats();
-				populateList();
-				Log.e("games", currRoleGames.size() + "");
-				Log.e("champs", champs.size() + "");
+				caseFive();
 				break;
 			case 6:
-				games = db.getAllGames();
-				mTitle = "My Supports";
-				screen = SUPPORT;
-				currRoleGames = filterGames("Support");
-				champs = compileChamps(currRoleGames);
-				updateStats();
-				populateList();
-				Log.e("games", currRoleGames.size() + "");
-				Log.e("champs", champs.size() + "");
+				caseSix();
 				break;
 			case 7:
 				startActivity(new Intent(this, AddGameInfo.class));
@@ -312,7 +263,6 @@ public class MainActivity extends Activity
 	public ArrayList<Game> filterGames(String role) {
 		ArrayList<Game> filteredGames = new ArrayList<>();
 		for (int i = 0; i < games.size(); i++) {
-			Log.e("Role of " + i, games.get(i).getRole());
 			if (games.get(i).getRole().equals(role)) {
 				filteredGames.add(games.get(i));
 			}
@@ -323,16 +273,17 @@ public class MainActivity extends Activity
 	public ArrayList<Champion> compileChamps(ArrayList<Game> games) {
 		ArrayList<Champion> champs = new ArrayList<>();
 		for (int i = 0; i < games.size(); i++) {
-			Log.e("Champ Names(W/L): " + i, games.get(i).getName() + "/" + games.get(i).getWin());
+			boolean isInList = false;
 			for (int j = 0; j < champs.size(); j++) {
-				if (!games.get(i).getName().equals(champs.get(j).getName())) {
-					champs.add(new Champion(games.get(i).getName()));
-					Log.e("Champ " + i + " Names", champs.get(i).getName());
+				if (games.get(i).getName().equals(champs.get(j).getName())) {
+					isInList = true;
 				}
+			}
+			if (!isInList) {
+				champs.add(new Champion(games.get(i).getName()));
 			}
 			if (champs.size() == 0) {
 				champs.add(new Champion(games.get(i).getName()));
-				Log.e("Champ " + i + " Names", champs.get(i).getName());
 			}
 		}
 		for (int i = 0; i < champs.size(); i++) {
@@ -428,14 +379,156 @@ public class MainActivity extends Activity
 
 	public void populateList() {
 		adapter = new ListAdapter1();
-//		Log.d("first",""+adapter);
 		ListView list = (ListView) this.findViewById(R.id.Champions);
-//		Log.d("second", ""+ list);
 		list.setAdapter(adapter);
 	}
 
 	public double roundTwoDecimals(double d) {
 		DecimalFormat twoDForm = new DecimalFormat("#.##");
 		return Double.valueOf(twoDForm.format(d));
+	}
+
+	public double calcPoints(Champion champ) {
+		double points = 0;
+		double killPoints = 0;
+		//1 kill = 12 points
+		double deathPoints = 0;
+		//1 death = -5 points
+		double assistsPoints = 0;
+		//1 assist = 3 points
+		double csPerMinPoints = 0;
+		double csPoints = 0;
+		//1 cs = 1 point
+		double winRate = 0;
+		//multiply points by winrate for final points
+
+		killPoints = champ.getKills() * 12;
+		deathPoints = champ.getDeaths() * (-5);
+		assistsPoints = champ.getAssists() * 3;
+		csPerMinPoints = champ.getCs() / champ.getMins();
+		csPoints = csPerMinPoints * 35;
+		winRate = champ.getWinrate();
+		points = killPoints + deathPoints + assistsPoints + csPoints;
+		points *= winRate;
+		Log.e(champ.getName() + " points", points + "");
+		return points;
+	}
+
+	public ArrayList<Champion> orderChamps(ArrayList<Champion> champs) {
+		if (champs.size() == 0) {
+			return champs;
+		} else {
+			ArrayList<Champion> orderedChamps = new ArrayList<>();
+			int goalSize = champs.size() - 1;
+			double mostPoints;
+			int champsInNewList = 0;
+			while (champsInNewList < goalSize) {
+				mostPoints = 0;
+				for (Champion champ : champs) {
+					if (champ.getPoints() > mostPoints) {
+						mostPoints = champ.getPoints();
+					}
+				}
+				int index = 0;
+				for (Champion champ : champs) {
+					if (champ.getPoints() == mostPoints) {
+						orderedChamps.add(champ);
+						index = champs.indexOf(champ);
+						champsInNewList++;
+						break;
+					}
+				}
+				champs.remove(index);
+			}
+			orderedChamps.add(champs.get(0));
+			return orderedChamps;
+		}
+	}
+
+	public void caseOne() {
+		games = db.getAllGames();
+		mTitle = "My Overall Stats";
+		screen = STATS;
+		champs = compileChamps(games);
+		updateStats();
+		for (int i = 0; i < champs.size(); i++) {
+			champs.get(i).setPoints(calcPoints(champs.get(i)));
+		}
+		champs = orderChamps(champs);
+		populateList();
+	}
+
+	public void caseTwo() {
+		games = db.getAllGames();
+		mTitle = "My Top Laners";
+		screen = TOP;
+		currRoleGames = filterGames("Top Laner");
+		champs = compileChamps(currRoleGames);
+		updateStats();
+		for (int i = 0; i < champs.size(); i++) {
+			champs.get(i).setPoints(calcPoints(champs.get(i)));
+		}
+		champs = orderChamps(champs);
+		populateList();
+	}
+
+	public void caseThree() {
+		games = db.getAllGames();
+		mTitle = "My Junglers";
+		screen = JUNGLE;
+		currRoleGames = filterGames("Jungler");
+		champs = compileChamps(currRoleGames);
+		updateStats();
+		for (int i = 0; i < champs.size(); i++) {
+			champs.get(i).setPoints(calcPoints(champs.get(i)));
+		}
+		champs = orderChamps(champs);
+		populateList();
+	}
+
+	public void caseFour() {
+		games = db.getAllGames();
+		mTitle = "My Mid Laners";
+		screen = MID;
+		currRoleGames = filterGames("Mid Laner");
+		champs = compileChamps(currRoleGames);
+		updateStats();
+		for (int i = 0; i < champs.size(); i++) {
+			champs.get(i).setPoints(calcPoints(champs.get(i)));
+		}
+		champs = orderChamps(champs);
+		populateList();
+	}
+
+	public void caseFive() {
+		games = db.getAllGames();
+		mTitle = "My AD Carries";
+		screen = ADC;
+		currRoleGames = filterGames("AD Carry");
+		champs = compileChamps(currRoleGames);
+		updateStats();
+		for (int i = 0; i < champs.size(); i++) {
+			champs.get(i).setPoints(calcPoints(champs.get(i)));
+		}
+		champs = orderChamps(champs);
+		populateList();
+	}
+
+	public void caseSix() {
+		games = db.getAllGames();
+		mTitle = "My Supports";
+		screen = SUPPORT;
+		currRoleGames = filterGames("Support");
+		champs = compileChamps(currRoleGames);
+		updateStats();
+		for (int i = 0; i < champs.size(); i++) {
+			champs.get(i).setPoints(calcPoints(champs.get(i)));
+		}
+		champs = orderChamps(champs);
+		populateList();
+	}
+
+	public String getMTitle() {
+		return mTitle + "";
 	}
 }

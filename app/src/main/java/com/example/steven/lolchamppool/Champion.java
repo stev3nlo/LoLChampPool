@@ -12,6 +12,7 @@ public class Champion {
 	int mins;
 	int secs;
 	double winrate;
+	double points;
 
 	public Champion() {
 		name = "";
@@ -22,6 +23,7 @@ public class Champion {
 		mins = -1;
 		secs = -1;
 		winrate = -1.0;
+		points = 0;
 	}
 
 	public Champion(String name) {
@@ -33,6 +35,7 @@ public class Champion {
 		mins = -1;
 		secs = -1;
 		winrate = -1.0;
+		points = 0;
 	}
 
 	public Champion(String name, double kills, double deaths, double assists, int cs, int mins, int secs, double winrate) {
@@ -44,6 +47,7 @@ public class Champion {
 		this.mins = mins;
 		this.secs = secs;
 		this.winrate = winrate;
+		points = 0;
 	}
 
 	public String getName() {
@@ -108,5 +112,13 @@ public class Champion {
 
 	public void setWinrate(double winrate) {
 		this.winrate = winrate;
+	}
+
+	public double getPoints() {
+		return points;
+	}
+
+	public void setPoints(double points) {
+		this.points = points;
 	}
 }

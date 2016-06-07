@@ -123,7 +123,6 @@ public class AddGameInfo extends Activity {
 		}
 
 		final Game game = new Game(id, name, role, kills, deaths, assists, CS, mins, secs, won);
-		Log.e("final add W/L", game.getWin() + "");
 
 		LayoutInflater linf = LayoutInflater.from(this);
 		final View inflator = linf.inflate(R.layout.alertdialog, null);
